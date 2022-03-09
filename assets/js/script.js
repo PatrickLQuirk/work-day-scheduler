@@ -34,8 +34,28 @@ var createTimeBlocks = function() {
 
         timeBlock.append(hourH2, eventDescription, saveButton);
 
+        auditTimeBlock(timeBlock);
+
         timeBlockContainerEl.append(timeBlock);
     };
 };
+
+var auditTimeBlock = function(timeBlock) {
+    var blockHourText = $(timeBlock).attr("data-time");
+    var blockHour = moment(blockHourText, "hA").hour();
+    var currentHour = moment().hour();
+    
+    // remove old classes from timeBlock textarea
+    var timeBlockText = $(timeBlock).find("textarea");
+    $(timeBlockText).removeClass("past present future");
+
+    if (blockHour < currentHour) {
+        $(timeBlockText).addClass("past");
+    } else if (blockHour === currentHour) {
+        $(timeBlockText).addClass("present");
+    } else {
+        $(timeBlockText).addClass("future");
+    }
+}
 
 createTimeBlocks();
