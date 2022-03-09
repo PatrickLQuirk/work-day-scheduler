@@ -20,7 +20,7 @@ var createTimeBlocks = function() {
             .addClass("time-block row")
             .attr("data-time", blockHour);
         
-        var hourH2 = $("<h2>")
+        var hourP = $("<p>")
             .addClass("hour col-1")
             .text(blockHour);
         
@@ -32,7 +32,7 @@ var createTimeBlocks = function() {
             .addClass("fas fa-save");
         saveButton.append(saveButtonIcon);
 
-        timeBlock.append(hourH2, eventDescription, saveButton);
+        timeBlock.append(hourP, eventDescription, saveButton);
 
         auditTimeBlock(timeBlock);
         displayDate();
