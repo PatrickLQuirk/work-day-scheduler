@@ -35,6 +35,7 @@ var createTimeBlocks = function() {
         timeBlock.append(hourH2, eventDescription, saveButton);
 
         auditTimeBlock(timeBlock);
+        displayDate();
 
         timeBlockContainerEl.append(timeBlock);
     };
@@ -57,5 +58,21 @@ var auditTimeBlock = function(timeBlock) {
         $(timeBlockText).addClass("future");
     }
 }
+
+var displayDate = function() {
+    var currentDate = moment().format("dddd, MMMM Do");
+    $("#currentDay").text(currentDate);
+}
+
+// update whether time-blocks are in past, present, or future every minute
+setInterval(function() {
+    $(".time-block").each(function(index, el){
+        auditTimeBlock(el);
+    });
+}, 1000 * 60);
+
+setInterval(function() {
+    displayDate();
+}, 1000 * 60 * 60 * 6);
 
 createTimeBlocks();
