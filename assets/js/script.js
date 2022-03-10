@@ -1,4 +1,5 @@
 var timeBlockContainerEl = $("#time-block-container");
+var events = {}
 
 var createTimeBlocks = function() {
     // in the for loop, i is the number of hours since midnight (the hour in 24-hour time)
@@ -64,6 +65,10 @@ var displayDate = function() {
     $("#currentDay").text(currentDate);
 }
 
+var saveEvents = function() {
+    localStorage.setItem("events", JSON.stringify(events));
+};
+
 // update whether time-blocks are in past, present, or future every minute
 setInterval(function() {
     $(".time-block").each(function(index, el){
@@ -74,5 +79,14 @@ setInterval(function() {
 setInterval(function() {
     displayDate();
 }, 1000 * 60 * 60 * 6);
+
+$("#time-block-container").on("click", "button", function() {
+    var eventBlock = $(this).closest(".time-block");
+    var eventHour = $(eventBlock).attr("data-time");
+    var eventText = $(eventBlock).find(".description")
+        .val().trim();
+    events[eventHour] = eventText;
+    saveEvents();
+})
 
 createTimeBlocks();
