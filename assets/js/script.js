@@ -1,21 +1,27 @@
 var timeBlockContainerEl = $("#time-block-container");
 var events = {}
 
+// takes the hour in 24 hour time (i) and outputs a string that gives the hour in the format (hour)(AM/PM)
+// (i.e. 10 becomes "10AM" and 15 becomes "3PM")
+// the purpose of having the i is to make looping through the hours of a business day easier.
+var convertHourFormat = function(i) {
+    if (i < 12) {
+        return i + "AM";
+    }
+    else if (i === 12) {
+        return i + "PM";
+    }
+    else {
+        return (i - 12) + "PM";
+    };
+}
 var createTimeBlocks = function() {
     // in the for loop, i is the number of hours since midnight (the hour in 24-hour time)
     for (i = 9; i <= 17; i++) {
         
         // create a blockHour variable that gives the hour of the block in the format (hour)(AM/PM)
         // (i.e. 10AM or 3PM)
-        if (i < 12) {
-            var blockHour = i + "AM";
-        }
-        else if (i === 12) {
-            var blockHour = i + "PM";
-        }
-        else {
-            var blockHour = (i - 12) + "PM";
-        }
+        var blockHour = convertHourFormat(i);
 
         var timeBlock = $("<div>")
             .addClass("time-block row")
@@ -40,6 +46,7 @@ var createTimeBlocks = function() {
 
         timeBlockContainerEl.append(timeBlock);
     };
+    loadEvents();
 };
 
 var auditTimeBlock = function(timeBlock) {
@@ -63,6 +70,23 @@ var auditTimeBlock = function(timeBlock) {
 var displayDate = function() {
     var currentDate = moment().format("dddd, MMMM Do");
     $("#currentDay").text(currentDate);
+}
+
+var loadEvents = function() {
+    events = JSON.parse(localStorage.getItem("events"));
+    if (!events) {
+        events = {};
+    };
+
+    for (i = 9; i <= 17; i++) {
+        var hour = convertHourFormat(i);
+        if (events[hour]) {
+            var eventText = events[hour];
+            var timeBlock = $(timeBlockContainerEl).find("[data-time='" + hour + "']");
+            $(timeBlock).find(".description")
+                .val(eventText);
+        }
+    }
 }
 
 var saveEvents = function() {
