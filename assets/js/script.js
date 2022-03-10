@@ -15,38 +15,30 @@ var convertHourFormat = function(i) {
         return (i - 12) + "PM";
     };
 }
-var createTimeBlocks = function() {
-    // in the for loop, i is the number of hours since midnight (the hour in 24-hour time)
-    for (i = 9; i <= 17; i++) {
-        
-        // create a blockHour variable that gives the hour of the block in the format (hour)(AM/PM)
-        // (i.e. 10AM or 3PM)
-        var blockHour = convertHourFormat(i);
+var createTimeBlock = function(eventHour, eventText) {
+    var timeBlock = $("<div>")
+        .addClass("time-block row")
+        .attr("data-time", eventHour);
+    
+    var hourP = $("<p>")
+        .addClass("hour col-1")
+        .text(eventHour);
+    
+    var eventDescription = $("<textarea>").addClass("description col-10 past");
+    $(eventDescription).val(eventText);
 
-        var timeBlock = $("<div>")
-            .addClass("time-block row")
-            .attr("data-time", blockHour);
-        
-        var hourP = $("<p>")
-            .addClass("hour col-1")
-            .text(blockHour);
-        
-        var eventDescription = $("<textarea>").addClass("description col-10 past");
+    var saveButton = $("<button>")
+        .addClass("saveBtn col-1");
+    var saveButtonIcon = $("<i>")
+        .addClass("fas fa-save");
+    saveButton.append(saveButtonIcon);
 
-        var saveButton = $("<button>")
-            .addClass("saveBtn col-1");
-        var saveButtonIcon = $("<i>")
-            .addClass("fas fa-save");
-        saveButton.append(saveButtonIcon);
+    timeBlock.append(hourP, eventDescription, saveButton);
 
-        timeBlock.append(hourP, eventDescription, saveButton);
+    auditTimeBlock(timeBlock);
+    displayDate();
 
-        auditTimeBlock(timeBlock);
-        displayDate();
-
-        timeBlockContainerEl.append(timeBlock);
-    };
-    loadEvents();
+    timeBlockContainerEl.append(timeBlock);
 };
 
 var auditTimeBlock = function(timeBlock) {
@@ -79,13 +71,15 @@ var loadEvents = function() {
     };
 
     for (i = 9; i <= 17; i++) {
-        var hour = convertHourFormat(i);
-        if (events[hour]) {
-            var eventText = events[hour];
-            var timeBlock = $(timeBlockContainerEl).find("[data-time='" + hour + "']");
-            $(timeBlock).find(".description")
-                .val(eventText);
+        var eventHour = convertHourFormat(i);
+        if (events[eventHour]) {
+            var eventText = events[eventHour];
         }
+        else {
+            var eventText = "";
+        };
+
+        createTimeBlock(eventHour, eventText);
     }
 }
 
@@ -113,4 +107,4 @@ $("#time-block-container").on("click", "button", function() {
     saveEvents();
 })
 
-createTimeBlocks();
+loadEvents();
