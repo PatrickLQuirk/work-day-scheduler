@@ -8,3 +8,9 @@ The timeblocks are color-coded based on whether they are in the past (grey), pre
 
 The user can enter an event into each time block, and then store the result in local storage by clicking a save button.
 The events that the user stores persist after refreshing the page or closing and re-opening it.
+
+## Link to site
+https://patricklquirk.github.io/work-day-scheduler/
+
+## Image of site
+![Image of website](assets/images/image-of-site.PNG)
